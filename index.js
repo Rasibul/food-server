@@ -41,6 +41,12 @@ async function run() {
       res.send(result)
     })
 
+    app.post('/carts',async(req,res)=>{
+      const cartItem = req.body
+      const result = await cartsCollection.insertOne(cartItem)
+      res.send(result)
+    })
+
 
 
     // Send a ping to confirm a successful connection
