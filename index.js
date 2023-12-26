@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
 require('dotenv').config()
 const port = process.env.PORT || 5000
 
@@ -14,7 +15,7 @@ app.use(express.json())
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+
 const uri = "mongodb+srv://food-cluster:5KegV4CmqJHOAIo9@cluster0.xmelfag.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -36,14 +37,40 @@ async function run() {
     const menuCollection = client.db("food-client").collection("menus")
     const cartsCollection = client.db("food-client").collection("cartItems")
 
-    app.get('/menu',async(req,res)=>{
+    app.get('/menu', async (req, res) => {
       const result = await menuCollection.find().toArray()
       res.send(result)
     })
 
-    app.post('/carts',async(req,res)=>{
+    // post to food cart
+    app.post('/carts', async (req, res) => {
       const cartItem = req.body
       const result = await cartsCollection.insertOne(cartItem)
+      res.send(result)
+    })
+    // get food add to cart section
+
+    app.get('/carts', async (req, res) => {
+      const email = req.query.email
+      const filter = { email: email }
+      const result = await cartsCollection.find(filter).toArray()
+      res.send(result)
+    })
+
+    // get specific food cart
+    app.get('/carts/:id', async (req, res) => {
+      const id = req.params.id
+      const filter = { _id: new ObjectId(id) }
+      const result = await cartsCollection.findOne(filter)
+      res.send(result)
+    })
+
+    // delete food card
+
+    app.delete('/carts/:id', async (req, res) => {
+      const id = req.params.id
+      const filter = { _id: new ObjectId(id) }
+      const result = await cartsCollection.deleteOne(filter)
       res.send(result)
     })
 
