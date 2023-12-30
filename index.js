@@ -1,91 +1,32 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
-require('dotenv').config()
+const mongoose = require('mongoose');
+// require('dotenv').config()
 const port = process.env.PORT || 5000
 
 // middleware
 app.use(cors())
 app.use(express.json())
 
-// user name:food-cluster
-// pass:5KegV4CmqJHOAIo9
+// connect mongodb using mongoose
+// user name:rasibul179
+// pass:k6giboj3OLkiRYgU
 
+mongoose.connect(`mongodb+srv://rasibul179:k6giboj3OLkiRYgU@food-client.4uhqxnh.mongodb.net/demo-food-client?retryWrites=true&w=majority`)
+  .then(
+    console.log("mongodb connected sucessfully")
+  )
+  .catch((error) => {
+    console.log("error connecting tomongodb", error)
+  })
 
+// import route here
 
-
-
-const uri = "mongodb+srv://food-cluster:5KegV4CmqJHOAIo9@cluster0.xmelfag.mongodb.net/?retryWrites=true&w=majority";
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    // await client.connect();
-
-    // create a collection
-
-    const menuCollection = client.db("food-client").collection("menus")
-    const cartsCollection = client.db("food-client").collection("cartItems")
-
-    app.get('/menu', async (req, res) => {
-      const result = await menuCollection.find().toArray()
-      res.send(result)
-    })
-
-    // post to food cart
-    app.post('/carts', async (req, res) => {
-      const cartItem = req.body
-      const result = await cartsCollection.insertOne(cartItem)
-      res.send(result)
-    })
-    // get food add to cart section
-
-    app.get('/carts', async (req, res) => {
-      const email = req.query.email
-      const filter = { email: email }
-      const result = await cartsCollection.find(filter).toArray()
-      res.send(result)
-    })
-
-    // get specific food cart
-    app.get('/carts/:id', async (req, res) => {
-      const id = req.params.id
-      const filter = { _id: new ObjectId(id) }
-      const result = await cartsCollection.findOne(filter)
-      res.send(result)
-    })
-
-    // delete food card
-
-    app.delete('/carts/:id', async (req, res) => {
-      const id = req.params.id
-      const filter = { _id: new ObjectId(id) }
-      const result = await cartsCollection.deleteOne(filter)
-      res.send(result)
-    })
-
-
-
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    // await client.close();
-  }
-}
-run().catch(console.dir);
-
+const menuRoutes = require('./api/routes/menuRoutes')
+const cartRoutes = require('./api/routes/carRoutes')
+app.use('/menu', menuRoutes)
+app.use('/carts', cartRoutes)
 
 app.get('/', (req, res) => {
   res.send('food is running')
