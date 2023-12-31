@@ -43,7 +43,52 @@ const deleteUser = async (req, res) => {
     }
 }
 
+// create a admin
+
+const getAdmin = async (req, res) => {
+    const email = req.params.email
+    const query = { email: email }
+    try {
+        const user = await User.findOne(query)
+        if (email !== req.decoded.email) {
+            return res.status(404).send({ message: "Forbidden Access" })
+        }
+        let admin = false
+        if (user) {
+            admin = user?.role === 'admin'
+        }
+        res.status(200).json({ admin })
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// make a admin of a user
+
+const makeAdmin = async (req, res) => {
+    const userId = req.params.id
+    const { name, email, photoUrl, role } = req.body
+    try {
+        const updateUser = await User.findByIdAndUpdate(userId,
+            {
+                role: "admin"
+            },
+            {
+                new:true, runValidators:true
+            }
+        )
+        if(!updateUser){
+            return res.status(404).json({ message: "User not found" })
+        }
+        res.status(200).json({ updateUser })
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
 
 module.exports = {
-    getAllUser, createUser,deleteUser
+    getAllUser, createUser, deleteUser, getAdmin,makeAdmin
 }
