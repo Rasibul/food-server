@@ -25,8 +25,10 @@ mongoose.connect(`mongodb+srv://rasibul179:k6giboj3OLkiRYgU@food-client.4uhqxnh.
 
 const menuRoutes = require('./api/routes/menuRoutes')
 const cartRoutes = require('./api/routes/carRoutes')
+const userRoutes = require('./api/models/User')
 app.use('/menu', menuRoutes)
 app.use('/carts', cartRoutes)
+app.use('/users', userRoutes)
 
 app.get('/', (req, res) => {
   res.send('food is running')
