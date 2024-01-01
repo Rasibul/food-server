@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const userControler = require('../controlers/userControler')
 
-router.get('/', userControler.getAllUser)
+router.get('/', userControler.getAllUsers)
 router.post('/', userControler.createUser)
 router.delete('/:id', userControler.deleteUser)
 router.get('/admin/:email', userControler.getAdmin)
