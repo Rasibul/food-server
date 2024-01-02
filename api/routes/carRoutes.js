@@ -3,10 +3,11 @@ const Carts = require('../models/Cart')
 const router = express.Router()
 
 const cartControler = require('../controlers/cartControler')
+const verifyToken = require('../middelware/verifyToken')
 
 
 // all rotues
-router.get('/', cartControler.getCartByEmail)
+router.get('/',verifyToken, cartControler.getCartByEmail)
 router.post('/', cartControler.addToCart)
 router.delete('/:id', cartControler.deleteCart)
 router.put('/:id', cartControler.updateCart)
