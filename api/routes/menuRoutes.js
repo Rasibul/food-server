@@ -9,6 +9,10 @@ router.get('/', menuControlers.getAllMenuItems)
 
 // post new meni item
 
-router.post('/',menuControlers.postMenuItem)
+router.post('/', menuControlers.postMenuItem)
+
+// delete menu item
+
+router.delete('/:id', menuControlers.deleteMenuItem);
 
 module.exports = router

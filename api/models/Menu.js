@@ -6,11 +6,11 @@ const menuSchema = new Schema({
     name: {
         type: String,
         trim: true,
-        require: true,
-        minlength: 3,
+        required: true,
+        minlength: 3
     },
     recipe: String,
-    image: String,
+    image: String, 
     category: String,
     price: Number,
     createdAt: {
