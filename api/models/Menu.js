@@ -12,10 +12,14 @@ const menuSchema = new Schema({
     recipe: String,
     image: String,
     category: String,
-    price: Number
+    price: Number,
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 
 })
 
 // create model
-const menu = mongoose.model("Menu",menuSchema)
+const menu = mongoose.model("Menu", menuSchema)
 module.exports = menu;

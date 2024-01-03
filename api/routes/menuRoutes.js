@@ -5,6 +5,10 @@ const menuControlers = require('../controlers/menuControler')
 
 // get all menu item
 
-router.get('/', menuControlers.getAllMenuItem)
+router.get('/', menuControlers.getAllMenuItems)
+
+// post new meni item
+
+router.post('/',menuControlers.postMenuItem)
 
 module.exports = router
