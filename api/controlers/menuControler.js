@@ -31,7 +31,7 @@ const deleteMenuItem = async (req, res) => {
     try {
         const deletedItem = await Menu.findByIdAndDelete(menuId);
 
-        console.log(deletedItem);
+        // console.log(deletedItem);
 
         if (!deletedItem) {
             return res.status(404).json({ message: "Menu not found" })
@@ -42,6 +42,43 @@ const deleteMenuItem = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// get a singel menu item 
+const singelMenuItem = async (req, res) => {
+    const menuId = req.params.id
+    try {
+        const menu = await Menu.findById(menuId)
+        res.status(200).json(menu)
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+// update single menu item
+const updateMenuItem = async (req, res) => {
+    const menuId = req.params.id;
+    const { name, recipe, image, category, price } = req.body;
+    try {
+        const updatedMenu = await Menu.findByIdAndUpdate(menuId,
+            { name, recipe, image, category, price },
+            { new: true, runValidator: true }
+        );
+
+        if (!updatedMenu) {
+            return res.status(404).json({ message: "Menu not found" })
+        }
+
+        res.status(200).json(updatedMenu)
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
-    getAllMenuItems, postMenuItem, deleteMenuItem
+    getAllMenuItems,
+    postMenuItem,
+    deleteMenuItem,
+    singelMenuItem,
+    updateMenuItem
 }
